@@ -1,3 +1,3 @@
 Hi!
 
-This repository is contains simple Spring Boot application.
+This repository contains a simple Spring Boot application.
