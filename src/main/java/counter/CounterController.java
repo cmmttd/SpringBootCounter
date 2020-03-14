@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class CounterController {
 
     @GetMapping("/create/{name}")
-    //@ResponseBody
+    @ResponseBody
     public String create(@PathVariable String name) {
         if (CounterData.containsKey(name)) {
             return "Failed: \"" + name + "\" already exists";
