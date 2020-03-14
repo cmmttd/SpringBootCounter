@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/counters")
 public class CounterController {
 
-    @GetMapping("/create")
-    @ResponseBody
-    public String create(@RequestParam String name) {
+    @GetMapping("/create/{name}")
+    //@ResponseBody
+    public String create(@PathVariable String name) {
         if (CounterData.containsKey(name)) {
             return "Failed: \"" + name + "\" already exists";
         } else {
@@ -32,9 +32,9 @@ public class CounterController {
         }
     }
 
-    @GetMapping("/increment")
+    @GetMapping("/increment/{name}")
     @ResponseBody
-    public String increment(@RequestParam String name) {
+    public String increment(@PathVariable String name) {
         if (CounterData.containsKey(name)) {
             CounterData.increment(name);
             return "Done: \"" + name + "\" successfully increased";
@@ -43,9 +43,9 @@ public class CounterController {
         }
     }
 
-    @GetMapping("/get")
+    @GetMapping("/get/{name}")
     @ResponseBody
-    public String get(@RequestParam String name) {
+    public String get(@PathVariable String name) {
         if (CounterData.containsKey(name)) {
             return name + ": " + CounterData.getForName(name).toString();
         } else {
@@ -53,9 +53,9 @@ public class CounterController {
         }
     }
 
-    @GetMapping("/remove")
+    @GetMapping("/remove/{name}")
     @ResponseBody
-    public String remove(@RequestParam String name) {
+    public String remove(@PathVariable String name) {
         if (CounterData.containsKey(name)) {
             CounterData.remove(name);
             return "Done: \"" + name + "\" successfully deleted";
