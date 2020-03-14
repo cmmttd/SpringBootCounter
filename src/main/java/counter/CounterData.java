@@ -18,7 +18,7 @@ public class CounterData {
     }
 
     public static BigInteger getForName(String name) {
-        return counters.getOrDefault(name, BigInteger.valueOf(-1));
+        return counters.get(name);
     }
 
     public static void remove(String name) {
