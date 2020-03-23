@@ -1,11 +1,14 @@
 package counter;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Описание задачи:
  * Необходимо реализовать spring-boot приложение на JDK 8+, счетчик.
- * <p>
+ *
  * Требования:
  * Посредством RestApi должна быть возможность:
  * Создать счетчик с уникальным именем;
@@ -18,62 +21,48 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @RestController
-@RequestMapping("/counters")
+@RequestMapping("/counter")
 public class CounterController {
 
-    @GetMapping("/create/{name}")
-    @ResponseBody
-    public String create(@PathVariable String name) {
-        if (CounterData.containsKey(name)) {
-            return "Failed: \"" + name + "\" already exists";
-        } else {
-            CounterData.create(name);
-            return "Done: \"" + name + "\" successful create";
-        }
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<String> getNames(){
+        return CounterData.getNames();
     }
 
-    @GetMapping("/increment/{name}")
-    @ResponseBody
-    public String increment(@PathVariable String name) {
-        if (CounterData.containsKey(name)) {
-            CounterData.increment(name);
-            return "Done: \"" + name + "\" successfully increased";
-        } else {
-            return "Failed: \"" + name + "\" does not exist";
-        }
+    @GetMapping("/{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public String getName(@PathVariable String name){
+        if (CounterData.notContainsKey(name)) throw new NameNotFoundException();
+        return CounterData.getForName(name);
     }
 
-    @GetMapping("/get/{name}")
-    @ResponseBody
-    public String get(@PathVariable String name) {
-        if (CounterData.containsKey(name)) {
-            return name + ": " + CounterData.getForName(name).toString();
-        } else {
-            return "Failed: \"" + name + "\" does not exist";
-        }
-    }
-
-    @GetMapping("/remove/{name}")
-    @ResponseBody
-    public String remove(@PathVariable String name) {
-        if (CounterData.containsKey(name)) {
-            CounterData.remove(name);
-            return "Done: \"" + name + "\" successfully deleted";
-        } else {
-            return "Failed: \"" + name + "\" does not exist";
-        }
-    }
-
-    @GetMapping("/list")
-    @ResponseBody
-    public String list() {
-        return CounterData.getNames().toString();
+    @PostMapping("/{name}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public String add(@PathVariable String name){
+        CounterData.create(name);
+        return name;
     }
 
     @GetMapping("/sum")
-    @ResponseBody
-    public String sum(){
-        return CounterData.getSum().toString();
+    @ResponseStatus(HttpStatus.OK)
+    public String getSum(){
+        return CounterData.getSum();
     }
 
+    @PutMapping("/{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public String update(@PathVariable String name){
+        if (CounterData.notContainsKey(name)) throw new NameNotFoundException();
+        CounterData.increment(name);
+        return name;
+    }
+
+    @DeleteMapping("/{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public String del(@PathVariable String name){
+        if (CounterData.notContainsKey(name)) throw new NameNotFoundException();
+        CounterData.remove(name);
+        return name;
+    }
 }

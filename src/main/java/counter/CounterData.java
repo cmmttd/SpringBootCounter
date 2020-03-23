@@ -17,8 +17,8 @@ public class CounterData {
         counters.computeIfPresent(name, (k, v) -> v.add(BigInteger.ONE));
     }
 
-    public static BigInteger getForName(String name) {
-        return counters.get(name);
+    public static String getForName(String name) {
+        return counters.get(name).toString();
     }
 
     public static void remove(String name) {
@@ -29,15 +29,15 @@ public class CounterData {
         return new ArrayList<>(counters.keySet());
     }
 
-    public static BigInteger getSum() {
+    public static String getSum() {
         return counters.values()
                 .stream()
                 .reduce(BigInteger::add)
-                .orElse(BigInteger.ZERO);
+                .orElse(BigInteger.ZERO).toString();
     }
 
-    public static boolean containsKey(String name){
-        return counters.containsKey(name);
+    public static boolean notContainsKey(String name){
+        return !counters.containsKey(name);
     }
 
 }
