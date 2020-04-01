@@ -9,8 +9,8 @@ public class CounterData {
 
     private static ConcurrentHashMap<String, BigInteger> counters = new ConcurrentHashMap<>();
 
-    public static void create(String name) {
-        counters.putIfAbsent(name, BigInteger.ZERO);
+    public static BigInteger create(String name) {
+        return counters.putIfAbsent(name, BigInteger.ZERO);
     }
 
     public static void increment(String name) {

@@ -1,6 +1,7 @@
 package counter;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 /**
  * Описание задачи:
  * Необходимо реализовать spring-boot приложение на JDK 8+, счетчик.
- *
+ * <p>
  * Требования:
  * Посредством RestApi должна быть возможность:
  * Создать счетчик с уникальным именем;
@@ -25,44 +26,42 @@ import java.util.List;
 public class CounterController {
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<String> getNames(){
-        return CounterData.getNames();
+    public ResponseEntity<List<String>> getNames() {
+        return new ResponseEntity<>(CounterData.getNames(), HttpStatus.OK);
     }
 
     @GetMapping("/{name}")
-    @ResponseStatus(HttpStatus.OK)
-    public String getName(@PathVariable String name){
-        if (CounterData.notContainsKey(name)) throw new NameNotFoundException();
-        return CounterData.getForName(name);
+    public ResponseEntity<String> getName(@PathVariable String name) {
+        if (CounterData.notContainsKey(name))
+            return new ResponseEntity<>("Element not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(name.toUpperCase() + ": " + CounterData.getForName(name), HttpStatus.OK);
     }
 
     @PostMapping("/{name}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public String add(@PathVariable String name){
-        CounterData.create(name);
-        return name;
+    public ResponseEntity<String> add(@PathVariable String name) {
+        if (CounterData.create(name) != null)
+            return new ResponseEntity<>("Element already exist", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(name.toUpperCase() + " added", HttpStatus.OK);
     }
 
     @GetMapping("/sum")
-    @ResponseStatus(HttpStatus.OK)
-    public String getSum(){
-        return CounterData.getSum();
+    public ResponseEntity<String> getSum() {
+        return new ResponseEntity<>(CounterData.getSum(), HttpStatus.OK);
     }
 
     @PutMapping("/{name}")
-    @ResponseStatus(HttpStatus.OK)
-    public String update(@PathVariable String name){
-        if (CounterData.notContainsKey(name)) throw new NameNotFoundException();
+    public ResponseEntity<String> update(@PathVariable String name) {
+        if (CounterData.notContainsKey(name))
+            return new ResponseEntity<>("Element not found", HttpStatus.BAD_REQUEST);
         CounterData.increment(name);
-        return name;
+        return new ResponseEntity<>(name.toUpperCase() + " updated", HttpStatus.OK);
     }
 
     @DeleteMapping("/{name}")
-    @ResponseStatus(HttpStatus.OK)
-    public String del(@PathVariable String name){
-        if (CounterData.notContainsKey(name)) throw new NameNotFoundException();
+    public ResponseEntity<String> del(@PathVariable String name) {
+        if (CounterData.notContainsKey(name))
+            return new ResponseEntity<>("Element not found", HttpStatus.BAD_REQUEST);
         CounterData.remove(name);
-        return name;
+        return new ResponseEntity<>(name.toUpperCase() + " deleted", HttpStatus.OK);
     }
 }
