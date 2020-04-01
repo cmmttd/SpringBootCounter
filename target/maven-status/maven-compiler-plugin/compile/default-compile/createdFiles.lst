@@ -1,4 +1,3 @@
 counter\CounterData.class
-counter\NameNotFoundException.class
-counter\CounterController.class
 counter\CounterSpringApplication.class
+counter\CounterController.class
