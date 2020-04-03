@@ -1,10 +1,14 @@
 package counter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Описание задачи:
@@ -24,6 +28,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/counter")
 public class CounterController {
+
+    private final ApplicationContext context;
+
+    public CounterController(ApplicationContext context) {
+        this.context = context;
+    }
 
     @GetMapping
     public ResponseEntity<List<String>> getNames() {
@@ -63,5 +73,10 @@ public class CounterController {
             return new ResponseEntity<>("Element not found", HttpStatus.BAD_REQUEST);
         CounterData.remove(name);
         return new ResponseEntity<>(name.toUpperCase() + " deleted", HttpStatus.OK);
+    }
+
+    @GetMapping("/shutdown")
+    public void shutSown(){
+        ((ConfigurableApplicationContext) context).close();
     }
 }
