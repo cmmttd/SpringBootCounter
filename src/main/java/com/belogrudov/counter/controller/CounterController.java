@@ -5,7 +5,6 @@ import com.belogrudov.counter.exceptions.BadRequestException;
 import com.belogrudov.counter.exceptions.NotFoundException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +13,7 @@ import java.util.List;
 /**
  * Описание задачи:
  * Необходимо реализовать spring-boot приложение на JDK 8+, счетчик.
- * <p>
+ *
  * Требования:
  * Посредством RestApi должна быть возможность:
  * Создать счетчик с уникальным именем;
@@ -31,48 +30,51 @@ import java.util.List;
 public class CounterController {
 
     private final ApplicationContext context;
+    private final CounterData counterData;
 
-    public CounterController(ApplicationContext context) {
+    public CounterController(ApplicationContext context, CounterData counterData) {
         this.context = context;
+        this.counterData = counterData;
     }
 
     @GetMapping
     public ResponseEntity<List<String>> getNames() {
-        return ResponseEntity.ok(CounterData.getNames());
+        return ResponseEntity.ok(counterData.readKeys());
     }
 
     @GetMapping("/{name}")
     public ResponseEntity<String> getName(@PathVariable String name) {
-        if (CounterData.notContainsKey(name))
+        if (counterData.notContainsKey(name))
             throw new NotFoundException("Element not found");
-        return ResponseEntity.ok(name.toUpperCase() + ": " + CounterData.getForName(name));
+        return ResponseEntity.ok(name.toUpperCase() + ": " + counterData.read(name));
     }
 
     @PostMapping("/{name}")
     public ResponseEntity<String> add(@PathVariable String name) {
-        if (CounterData.create(name) != null)
+        if (counterData.notContainsKey(name))
+            return ResponseEntity.ok(name.toUpperCase() + " added");
+        else
             throw new BadRequestException("Element already exist");
-        return ResponseEntity.ok(name.toUpperCase() + " added");
     }
 
     @GetMapping("/sum")
     public ResponseEntity<String> getSum() {
-        return ResponseEntity.ok(CounterData.getSum());
+        return ResponseEntity.ok(counterData.sum());
     }
 
     @PutMapping("/{name}")
     public ResponseEntity<String> update(@PathVariable String name) {
-        if (CounterData.notContainsKey(name))
+        if (counterData.notContainsKey(name))
             throw new NotFoundException("Element not found");
-        CounterData.increment(name);
+        counterData.update(name);
         return ResponseEntity.ok(name.toUpperCase() + " updated");
     }
 
     @DeleteMapping("/{name}")
     public ResponseEntity<String> del(@PathVariable String name) {
-        if (CounterData.notContainsKey(name))
+        if (counterData.notContainsKey(name))
             throw new NotFoundException("Element not found");
-        CounterData.remove(name);
+        counterData.delete(name);
         return ResponseEntity.ok(name.toUpperCase() + " deleted");
     }
 

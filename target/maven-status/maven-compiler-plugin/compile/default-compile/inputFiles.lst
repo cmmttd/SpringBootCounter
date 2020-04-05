@@ -1,3 +1,6 @@
-C:\Users\V. Belogrudov\IdeaProjects\SpringBootCounter\src\main\java\counter\CounterData.java
-C:\Users\V. Belogrudov\IdeaProjects\SpringBootCounter\src\main\java\counter\CounterController.java
-C:\Users\V. Belogrudov\IdeaProjects\SpringBootCounter\src\main\java\counter\CounterSpringApplication.java
+C:\Users\V. Belogrudov\IdeaProjects\SpringBootCounter\src\main\java\com\belogrudov\counter\data\Dao.java
+C:\Users\V. Belogrudov\IdeaProjects\SpringBootCounter\src\main\java\com\belogrudov\counter\controller\CounterController.java
+C:\Users\V. Belogrudov\IdeaProjects\SpringBootCounter\src\main\java\com\belogrudov\counter\data\CounterData.java
+C:\Users\V. Belogrudov\IdeaProjects\SpringBootCounter\src\main\java\com\belogrudov\counter\exceptions\BadRequestException.java
+C:\Users\V. Belogrudov\IdeaProjects\SpringBootCounter\src\main\java\com\belogrudov\counter\exceptions\NotFoundException.java
+C:\Users\V. Belogrudov\IdeaProjects\SpringBootCounter\src\main\java\com\belogrudov\counter\CounterSpringApplication.java
