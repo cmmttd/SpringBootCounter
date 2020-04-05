@@ -1,4 +1,4 @@
-package counter;
+package com.belogrudov.counter.data;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

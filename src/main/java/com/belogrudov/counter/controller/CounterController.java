@@ -1,6 +1,8 @@
-package counter;
+package com.belogrudov.counter.controller;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.belogrudov.counter.data.CounterData;
+import com.belogrudov.counter.exceptions.BadRequestException;
+import com.belogrudov.counter.exceptions.NotFoundException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -36,46 +38,46 @@ public class CounterController {
 
     @GetMapping
     public ResponseEntity<List<String>> getNames() {
-        return new ResponseEntity<>(CounterData.getNames(), HttpStatus.OK);
+        return ResponseEntity.ok(CounterData.getNames());
     }
 
     @GetMapping("/{name}")
     public ResponseEntity<String> getName(@PathVariable String name) {
         if (CounterData.notContainsKey(name))
-            return new ResponseEntity<>("Element not found", HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(name.toUpperCase() + ": " + CounterData.getForName(name), HttpStatus.OK);
+            throw new NotFoundException("Element not found");
+        return ResponseEntity.ok(name.toUpperCase() + ": " + CounterData.getForName(name));
     }
 
     @PostMapping("/{name}")
     public ResponseEntity<String> add(@PathVariable String name) {
         if (CounterData.create(name) != null)
-            return new ResponseEntity<>("Element already exist", HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(name.toUpperCase() + " added", HttpStatus.OK);
+            throw new BadRequestException("Element already exist");
+        return ResponseEntity.ok(name.toUpperCase() + " added");
     }
 
     @GetMapping("/sum")
     public ResponseEntity<String> getSum() {
-        return new ResponseEntity<>(CounterData.getSum(), HttpStatus.OK);
+        return ResponseEntity.ok(CounterData.getSum());
     }
 
     @PutMapping("/{name}")
     public ResponseEntity<String> update(@PathVariable String name) {
         if (CounterData.notContainsKey(name))
-            return new ResponseEntity<>("Element not found", HttpStatus.BAD_REQUEST);
+            throw new NotFoundException("Element not found");
         CounterData.increment(name);
-        return new ResponseEntity<>(name.toUpperCase() + " updated", HttpStatus.OK);
+        return ResponseEntity.ok(name.toUpperCase() + " updated");
     }
 
     @DeleteMapping("/{name}")
     public ResponseEntity<String> del(@PathVariable String name) {
         if (CounterData.notContainsKey(name))
-            return new ResponseEntity<>("Element not found", HttpStatus.BAD_REQUEST);
+            throw new NotFoundException("Element not found");
         CounterData.remove(name);
-        return new ResponseEntity<>(name.toUpperCase() + " deleted", HttpStatus.OK);
+        return ResponseEntity.ok(name.toUpperCase() + " deleted");
     }
 
     @GetMapping("/shutdown")
-    public void shutSown(){
+    public void shutSown() {
         ((ConfigurableApplicationContext) context).close();
     }
 }

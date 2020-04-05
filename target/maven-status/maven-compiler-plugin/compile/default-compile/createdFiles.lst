@@ -1,3 +1,6 @@
-counter\CounterData.class
-counter\CounterController.class
-counter\CounterSpringApplication.class
+com\belogrudov\counter\exceptions\BadRequestException.class
+com\belogrudov\counter\data\CounterData.class
+com\belogrudov\counter\controller\CounterController.class
+com\belogrudov\counter\CounterSpringApplication.class
+com\belogrudov\counter\data\Dao.class
+com\belogrudov\counter\exceptions\NotFoundException.class
